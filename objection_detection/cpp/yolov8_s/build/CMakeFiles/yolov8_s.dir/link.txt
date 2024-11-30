@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/yolov8_s.dir/yolov8_s.cpp.o -o yolov8_s 

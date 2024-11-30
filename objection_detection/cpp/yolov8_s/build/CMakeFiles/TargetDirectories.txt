@@ -1,0 +1,3 @@
+/home/bing/code/open-source/rpi-deploy/objection_detection/cpp/yolov8_s/build/CMakeFiles/main.dir
+/home/bing/code/open-source/rpi-deploy/objection_detection/cpp/yolov8_s/build/CMakeFiles/edit_cache.dir
+/home/bing/code/open-source/rpi-deploy/objection_detection/cpp/yolov8_s/build/CMakeFiles/rebuild_cache.dir
