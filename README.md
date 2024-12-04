@@ -44,6 +44,11 @@ Memory: 8Gb
 ## Deployment framework 
 
 ### NCNN
+- compile ncnn 
+```cmake
+cmake -DCMAKE_BUILD_TYPE=Release -DNCNN_VULKAN=OFF -DNCNN_BUILD_EXAMPLES=ON -DNCNN_BUILD_BENCHMARK=ON -DNCNN_BENCHMARK=OFF ..
+```
+- compile pcnn 
 
 
 
