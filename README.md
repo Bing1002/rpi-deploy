@@ -26,18 +26,20 @@ Memory: 8Gb
 
 
 ## Measure/Benchmark 
+no batch, no dynamic shape
 
-| Hardware | Model     | Input Resolution | Batch         | Data type     | Params      | GFLOPs/MACs    | Accuracy    | FPS    | Latency (ms)    |Energy    | Cost ($)    | Comments    |
-|---------------|---------------|------------------|---------------|--------------|--------------|--------------|--------------|--------------|--------------|--------------|--------------|--------------|
-| RPI 5 @4 thread  | resnet18 | 3x224x224  | 1  | fp32  | 11.689512  | 1.81  | N/A  | N/A  | 20  | N/A  | N/A  |N/A  |
-| RPI 5 @4 thread  | yolov8_s | 3x640x640  | 1  | fp32  | Row 2, Col 3  | Row 2, Col 3  | Row 2, Col 3  | 10  | 110  |Row 2, Col 3  |Row 2, Col 3  |Row 2, Col 3  |
-| RPI 5 @4 thread  | yolox_s | Row 3, Col 2  | Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |
-| RPI 5 @4 thread  | fcos | Row 3, Col 2  | Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |
-| RPI 5 @4 thread  | bytetrack | Row 3, Col 2  | Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |
-| RPI 5 @4 thread  | rtmpose | Row 3, Col 2  | Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |
-| RPI 5 @4 thread  | clip | Row 3, Col 2  | Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |
-| RPI 5 @4 thread  | llm | Row 3, Col 2  | Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |
-| RPI 5 @4 thread  | vlm | Row 3, Col 2  | Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |Row 3, Col 3  |
+| Hardware | Model | Input Resolution | Batch | Data type | Sparsity | Params | GFLOPs/MACs | Accuracy | FPS | Latency (ms) |Energy | Cost ($) | Comments |
+|---------------|---------------|------------------|---------------|--------------|--------------|--------------|--------------|--------------|--------------|--------------|--------------|--------------|--------------|
+| RPI 5 @4 thread  | resnet18 | 3x224x224  | 1  | fp32 | 0  | 11.689512  | 1.81  | N/A  | N/A  | 20  | N/A  | N/A  |N/A  |
+| RPI 5 @4 thread  | yolov8_n | 3x640x640  | 1  | fp32 | 0 | Row | Row | Row | ~9  | 115  |Row |Row |Row |
+| RPI 5 @4 thread  | yolov8_n | 3x640x640  | 1  | int8 | 0 | Row | Row | Row | ~9  | 115  |Row |Row |Row |
+| RPI 5 @4 thread  | yolox_s | Row | Row |Row |Row |Row |Row |Row |Row |Row |Row |Row | Row |
+| RPI 5 @4 thread  | fcos | Row | Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |
+| RPI 5 @4 thread  | bytetrack | Row | Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |
+| RPI 5 @4 thread  | rtmpose | Row | Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |
+| RPI 5 @4 thread  | clip | Row | Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |
+| RPI 5 @4 thread  | llm | Row | Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |
+| RPI 5 @4 thread  | vlm | Row | Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |
 
 
 
