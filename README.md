@@ -66,13 +66,48 @@ cmake -DCMAKE_BUILD_TYPE=Release -DNCNN_VULKAN=OFF -DNCNN_BUILD_EXAMPLES=ON -DNC
 - raw model --> torchscript IR (tracing) --> pnnx IR --> ncnn
 
 ### Model compression 
-- quantization
-    - PTQ
-    - QAT
-- pruning 
-- knowledge distillation 
-- low-rank (optional) 
-- nas (optional)
+#### quantization
+Quantization is a process used to reduce the precision of numerical data (weights and activations), often for compressing machine learning models or improving computational efficiency.
+
+- clustering-based quantization (k-means)  
+    - **concept**: This method uses the k-means clustering algorithm to group data points into \( k \) clusters. Each cluster is represented by its centroid, and data points are replaced with the nearest centroid to reduce storage and computation requirements.
+    - **granularity**: The parameter \( k \) determines the granularity of quantization. A larger \( k \) results in finer quantization but increases computational complexity.
+
+- linear quantization
+    - **definition**: also known as affine quantization, this method maps floating-point values to a lower-precision integer range using a linear transformation 
+    - **formula**: 
+        $$
+        r = s * (q - z) 
+        $$
+        where: 
+        - \( r \): Original floating-point value
+        - \( q \): Quantized integer value
+        - \( s \): Scale factor
+        - \( z \): Zero-point offset 
+    - **zero point**: 
+        - *Symmetric Quantization*: Zero-point (\( z \)) is fixed at 0, simplifying computations but potentially wasting dynamic range when data is not symmetric around zero.
+        - *Asymmetric Quantization*: Zero-point (\( z \)) is non-zero, allowing better utilization of the integer range when data distributions are uneven.
+
+    - scaling granularity 
+        - per-tensor
+        - per-channel
+        - group
+    - dynamic range clipping: unlike weights, activations range varies across inputs, the activations statistics need to be gathers in advance. 
+        - type 1: EMA 
+        - type 2: calibration dataset 
+    - rounding 
+    - two types 
+        - post-training quantization 
+        - quantization-aware training: improve performance of quantized model
+            - fake/simulated quantization 
+            - Straight-Through Estimator (STE)
+        
+
+- binary/tenary quantization 
+#### pruning/sparsity 
+#### knowledge distillation 
+#### low-rank (optional) 
+#### nas (optional)
 
 
 ### TODO 
