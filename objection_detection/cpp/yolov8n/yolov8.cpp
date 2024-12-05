@@ -1,5 +1,6 @@
 
 #include<cstdio>
+#include<string>
 
 #include <opencv2/opencv.hpp>
 
@@ -331,9 +332,14 @@ static void draw_objects(const cv::Mat& bgr, const std::vector<Object>& objects)
                     cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255));
 
     }
+
+
+    // display fps on the frame
+    cv::putText(image, "FPS: " + std::to_string(int(6)), cv::Point(10, 30), 
+                cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
+    // cv::imshow("yolov8 detection", image);
+    // cv::waitKey(1);
     cv::imwrite("result.png", image);
-
-
 }
 
 
@@ -368,9 +374,14 @@ int video_demo(ncnn::Net& model, const char* videopath)
 {
     cv::VideoCapture cap(videopath);
     if (!cap.isOpened()) {
-        std::cout << "Error open video file" << std::endl;
+        std::cout << "Error: couldn't open video" << std::endl;
         return -1;
     }
+
+    // fps calculation 
+    double fps; 
+    int frameCount = 0;
+    double start = ncnn::get_current_time();
 
     while (true) {
         cv::Mat m;
@@ -378,10 +389,20 @@ int video_demo(ncnn::Net& model, const char* videopath)
         if (m.empty()) {
             break; 
         }
-        printf("Load image...\n");
 
         std::vector<Object> objects;
         detect_yolov8(model, m, objects);
+
+        frameCount++;
+        if (frameCount % 1 == 0) {  // every frame 
+            double end = ncnn::get_current_time();
+            double duration = end - start;
+            fps = frameCount / (duration / 1000);
+            
+            // reset 
+            start = end;
+            frameCount = 0;
+        } 
 
         draw_objects(m, objects);
     }

@@ -19,9 +19,12 @@ This hobby project is a self-learning initiative aimed at understanding the depl
 - vlm (optional)
 
 ## Hardware 
-CPU: Arm Cortext-A76 CPU, 2.4GHz * 4, Neon  
+CPU: Arm Cortext-A76 CPU, 2.4GHz * 4, Neon, Compute power:~38GFLOPS/thread     
 GPU: VideoCore VII (integrated graph cards), Vulkan 1.3    
 Memory: 8Gb
+Accelerator:   
+    - Hailo-8L: ~13 TOPS
+    - Jetson Orin Nano: ~40 TOPS
 
 
 
@@ -53,7 +56,9 @@ cmake -DCMAKE_BUILD_TYPE=Release -DNCNN_VULKAN=OFF -DNCNN_BUILD_EXAMPLES=ON -DNC
 - compile pcnn 
 
 
-
+    if (cv::Waitkey(30) == 27) {
+        break;
+    }
 ### Model format choices 
 - pytorch checkpoint 
 - torchscript (scripting vs. tracing)
@@ -64,7 +69,9 @@ cmake -DCMAKE_BUILD_TYPE=Release -DNCNN_VULKAN=OFF -DNCNN_BUILD_EXAMPLES=ON -DNC
 ### Model conversion 
 - raw model --> onnx IR --> onnxruntime 
 - raw model --> onnx IR --> ncnn (deprecated)
-- raw model --> torchscript IR (tracing) --> pnnx IR --> ncnn (runtime)
+- raw model --> torchscript IR (tracing) --> pnnx    if (cv::Waitkey(30) == 27) {
+        break;
+    } IR --> ncnn (runtime)
 
 ### Model compression 
 #### quantization
