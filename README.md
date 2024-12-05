@@ -62,8 +62,9 @@ cmake -DCMAKE_BUILD_TYPE=Release -DNCNN_VULKAN=OFF -DNCNN_BUILD_EXAMPLES=ON -DNC
 
 
 ### Model conversion 
+- raw model --> onnx IR --> onnxruntime 
 - raw model --> onnx IR --> ncnn (deprecated)
-- raw model --> torchscript IR (tracing) --> pnnx IR --> ncnn
+- raw model --> torchscript IR (tracing) --> pnnx IR --> ncnn (runtime)
 
 ### Model compression 
 #### quantization
@@ -105,6 +106,9 @@ Quantization is a process used to reduce the precision of numerical data (weight
 
 - binary/tenary quantization 
 #### pruning/sparsity 
+- prunning granularity 
+- prunning criterion 
+- prunning ratio
 #### knowledge distillation 
 #### low-rank (optional) 
 #### nas (optional)
