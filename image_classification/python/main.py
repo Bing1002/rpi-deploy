@@ -1,13 +1,15 @@
 # Train CIFAR10 with PyTorch.
-# orchrun --standalone --nproc_per_node=4 main_ddp.py
+# torchrun --standalone --nproc_per_node=4 main_ddp.py
+
 # Train tricks:
 #   weight init 
 #   lr and lr scheduler 
 #   batch size
-#   optimizer 
-#   data augmentation 
-#   early stoppin 
-#   gradient clip 
+#   batch normalization
+#   optimizer: SGD, Adam, RMSprop, ADAMW, Muon 
+#   data augmentation:  
+#   early stop
+#   gradient clipping 
 #   EMA 
 import os
 import json 
