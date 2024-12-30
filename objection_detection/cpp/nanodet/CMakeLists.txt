@@ -5,8 +5,8 @@ project(nanodet)
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-include_directories("/home/bing/code/open-source/ncnn/build/install/include")
-link_directories("/home/bing/code/open-source/ncnn/build/install/lib")
+include_directories("/home/bing/code/open-source/ncnn/build_release_nobench/install/include")
+link_directories("/home/bing/code/open-source/ncnn/build_release_nobench/install/lib")
 
 # enable OpenMP
 find_package(OpenMP REQUIRED)
@@ -15,4 +15,4 @@ if (OPENMP_FOUND)
 endif()
 
 add_executable(main nanodet.cpp)
-target_link_libraries(main ncnnd ${OpenCV_LIBS} ${OpenMP_LIBRARIES})
+target_link_libraries(main ncnn ${OpenCV_LIBS} ${OpenMP_LIBRARIES})

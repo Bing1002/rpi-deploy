@@ -1,6 +1,6 @@
 
 #include <ncnn/net.h>
-
+#include<ncnn/benchmark.h>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -10,6 +10,9 @@
 #include <float.h>
 #include <stdio.h>
 #include <vector>
+#include<iostream>
+
+
 
 struct Object
 {
@@ -24,7 +27,6 @@ struct CenterPrior
     int y;
     int stride;
 };
-
 
 
 
@@ -255,21 +257,18 @@ static void generate_proposals2(const ncnn::Mat& pred, const std::vector<CenterP
 }
 
 
-static int detect_nanodet(const cv::Mat& bgr, std::vector<Object>& objects)
+static int detect_nanodet(ncnn::Net& nanodet, const cv::Mat& bgr, std::vector<Object>& objects)
 {
-    ncnn::Net nanodet;
+    // ncnn::Net nanodet;
 
-    nanodet.opt.use_vulkan_compute = false;
-    // nanodet.opt.use_bf16_storage = true;
+    // nanodet.opt.use_vulkan_compute = false;
+    // // nanodet.opt.use_bf16_storage = true;
 
-    // original pretrained model from https://github.com/RangiLyu/nanodet
-    // the ncnn model https://github.com/nihui/ncnn-assets/tree/master/models
-    //     nanodet.load_param("nanodet-plus-m_320.torchscript.ncnn.param");
-    //     nanodet.load_model("nanodet-plus-m_320.torchscript.ncnn.bin");
-    if (nanodet.load_param("/home/bing/code/checkpoints/nanodet/nanodet_plus_m_1.5x_416_torchscript.ncnn.param"))
-        exit(-1);
-    if (nanodet.load_model("/home/bing/code/checkpoints/nanodet/nanodet_plus_m_1.5x_416_torchscript.ncnn.bin"))
-        exit(-1);
+    // // original pretrained model from https://github.com/RangiLyu/nanodet
+    // if (nanodet.load_param("/home/bing/code/checkpoints/nanodet/nanodet_plus_m_1.5x_416_torchscript.ncnn.param"))
+    //     exit(-1);
+    // if (nanodet.load_model("/home/bing/code/checkpoints/nanodet/nanodet_plus_m_1.5x_416_torchscript.ncnn.bin"))
+    //     exit(-1);
 
     int width = bgr.cols;
     int height = bgr.rows;
@@ -287,15 +286,15 @@ static int detect_nanodet(const cv::Mat& bgr, std::vector<Object>& objects)
 
     // interpolation algorithm 
     ncnn::Mat in = ncnn::Mat::from_pixels_resize(bgr.data, ncnn::Mat::PIXEL_BGR, width, height, w, h);
-    fprintf(stderr, "w: %d, h: %d, c: %d\n", in.w, in.h, in.c);
-    for (int c = 0; c < in.c; c++)
-    {
-        float* ptr = in.channel(c);
-        for (int i = 0; i < 6; i++)
-        {
-            fprintf(stderr, "pixel %d: %f\n", i, ptr[i]);
-        }
-    }
+    // fprintf(stderr, "w: %d, h: %d, c: %d\n", in.w, in.h, in.c);
+    // for (int c = 0; c < in.c; c++)
+    // {
+    //     float* ptr = in.channel(c);
+    //     for (int i = 0; i < 6; i++)
+    //     {
+    //         fprintf(stderr, "pixel %d: %f\n", i, ptr[i]);
+    //     }
+    // }
 
     // pad to target_size rectangle
     int wpad = (w + 31) / 32 * 32 - w;
@@ -311,25 +310,26 @@ static int detect_nanodet(const cv::Mat& bgr, std::vector<Object>& objects)
     const float mean_vals[3] = {103.53f, 116.28f, 123.675f};
     const float norm_vals[3] = {0.017429f, 0.017507f, 0.017125f};
     in_pad.substract_mean_normalize(mean_vals, norm_vals);
-    for (int c = 0; c < in.c; c++)
-    {
-        float* ptr = in_pad.channel(c);
-        for (int i = 0; i < 6; i++)
-        {
-            fprintf(stderr, "pixel %d: %f\n", i, ptr[i]);
-        }
-    }
+    // for (int c = 0; c < in.c; c++)
+    // {
+    //     float* ptr = in_pad.channel(c);
+    //     for (int i = 0; i < 6; i++)
+    //     {
+    //         fprintf(stderr, "pixel %d: %f\n", i, ptr[i]);
+    //     }
+    // }
 
     ncnn::Extractor ex = nanodet.create_extractor();
-    fprintf(stderr, "in_pad.w: %d, in_pad.h: %d\n", in_pad.w, in_pad.h);
+    // fprintf(stderr, "in_pad.w: %d, in_pad.h: %d\n", in_pad.w, in_pad.h);
     ex.input("in0", in_pad);
 
 
     ncnn::Mat out;
     ex.extract("out0", out);
-    fprintf(stderr, "out.w: %d, out.h: %d, out.c: %d\n", out.w, out.h, out.c);
+    // fprintf(stderr, "out.w: %d, out.h: %d, out.c: %d\n", out.w, out.h, out.c);
 
     //
+    /*
     fprintf(stderr, "width: %d, height: %d, channels: %d, dims: %d\n", out.w, out.h, out.c, out.dims);
     fprintf(stderr, "total size: %d\n", out.total());
     fprintf(stderr, "cstep size: %d\n", out.cstep);
@@ -355,7 +355,7 @@ static int detect_nanodet(const cv::Mat& bgr, std::vector<Object>& objects)
         printf("\n");
         break;
     }
-
+    */
 
     std::vector<Object> proposals;
     std::vector<int> strides = { 8, 16, 32, 64 }; // strides of the multi-level feature.
@@ -363,7 +363,6 @@ static int detect_nanodet(const cv::Mat& bgr, std::vector<Object>& objects)
     // generate center priors in format of (x, y, stride)
     std::vector<CenterPrior> center_priors;
     generate_grid_center_priors(target_size, target_size, strides, center_priors);
-
 
     // generate proposals
     generate_proposals2(out, center_priors, prob_threshold, proposals); 
@@ -456,46 +455,176 @@ static void draw_objects(const cv::Mat& bgr, const std::vector<Object>& objects)
 }
 
 
-
-int main(int argc, char** argv)
+int webcam_demo(ncnn::Net& nanodet, int cam_id)
 {
-    if (argc != 2)
+    cv::VideoCapture cap(cam_id);
+    if (!cap.isOpened())
     {
-        fprintf(stderr, "Usage: %s [imagepath]\n", argv[0]);
+        fprintf(stderr, "cv::VideoCapture %d failed\n", cam_id);
         return -1;
     }
 
-    const char* imagepath = argv[1];
+    cv::Mat frame;
+    while (cap.read(frame))
+    {
+        std::vector<Object> objects;
+        detect_nanodet(nanodet, frame, objects);
 
+        draw_objects(frame, objects);
+
+        // cv::imshow("frame", frame);
+        // if (cv::waitKey(1) == 27)
+        //     break;
+    }
+
+    return 0;
+}
+
+int image_demo(ncnn::Net& nanodet, const char* imagepath)
+{
     cv::Mat m = cv::imread(imagepath, 1);
     if (m.empty())
     {
         fprintf(stderr, "cv::imread %s failed\n", imagepath);
         return -1;
     }
-    fprintf(stderr, "w: %d, h: %d, c: %d\n", m.cols, m.rows, m.channels());
-    fprintf(stderr, "step 0: %d, step 1: %d, elemSize: %d, totoal: %d\n", m.step[0], m.step[1], m.elemSize(), m.total());
+
+    // fprintf(stderr, "w: %d, h: %d, c: %d\n", m.cols, m.rows, m.channels());
+    // fprintf(stderr, "step 0: %d, step 1: %d, elemSize: %d, totoal: %d\n", m.step[0], m.step[1], m.elemSize(), m.total());
 
     // opencv matrix to ncnn mat
-
+    /*
     for (int row = 0; row < m.rows; row++) {
         for (int col = 0; col < m.cols; col++) {
             for (int channel = 0; channel < m.channels(); channel++) {
                 // BGR order 
-                fprintf(stderr, "pixel %d: %d, %d, %d\n", row, col, channel, m.at<cv::Vec3b>(row, col)[channel]);
-                fprintf(stderr, "pixel %d: %d, %d, %d\n", row, col, channel, (int)(*(m.data + m.step[0] * row + m.step[1] * col + channel)));
+                // fprintf(stderr, "pixel %d: %d, %d, %d\n", row, col, channel, m.at<cv::Vec3b>(row, col)[channel]);
+                // fprintf(stderr, "pixel %d: %d, %d, %d\n", row, col, channel, (int)(*(m.data + m.step[0] * row + m.step[1] * col + channel)));
                 
             }
             break;
         }
         break;
     }
-
+    */
 
     std::vector<Object> objects;
-    detect_nanodet(m, objects);
-
+    detect_nanodet(nanodet, m, objects);
     draw_objects(m, objects);
+
+    return 0;
+}
+
+
+int video_demo(ncnn::Net& nanodet, const char* path)
+{
+    cv::VideoCapture cap(path);
+    if (!cap.isOpened())
+    {
+        fprintf(stderr, "cv::VideoCapture %s failed\n", path);
+        return -1;
+    }
+
+    cv::Mat frame;
+    while (cap.read(frame))
+    {
+        std::vector<Object> objects;
+        detect_nanodet(nanodet, frame, objects);
+
+        draw_objects(frame, objects);
+        cv::waitKey(1);
+    }
+
+    return 0;
+}
+
+
+void benchmark(ncnn::Net& nanodet) 
+{
+    int loop_num = 100;
+    int warm_up = 8;
+    int height = 416;
+    int width = 416;
+
+    double time_min = DBL_MAX;
+    double time_max = -DBL_MAX;
+    double time_avg = 0;
+    ncnn::Mat input = ncnn::Mat(height, width, 3);
+    input.fill(0.01f);
+
+    for (int i = 0; i < warm_up + loop_num; i++)
+    {
+        double start = ncnn::get_current_time();
+        ncnn::Extractor ex = nanodet.create_extractor();
+        ex.input("in0", input);
+        ncnn::Mat preds;
+        ex.extract("out0", preds);
+        double end = ncnn::get_current_time();
+
+        double time = end - start;
+        if (i >= warm_up)
+        {
+            time_min = (std::min)(time_min, time);
+            time_max = (std::max)(time_max, time);
+            time_avg += time;
+        }
+    }
+    time_avg /= loop_num;
+    fprintf(stderr, "%20s  min = %7.2f  max = %7.2f  avg = %7.2f\n", "nanodet", time_min, time_max, time_avg);
+
+}
+
+
+
+int main(int argc, char** argv)
+{
+    if (argc != 3)
+    {
+        fprintf(stderr, "usage: %s [mode] [path]. \n For webcam mode=0, path is cam id; \n For image demo, mode=1, path=xxx/xxx/*.jpg; \n For video, mode=2, path=xxx/xxx/*.mp4; \n For benchmark, mode=3 path=0.\n", argv[0]);
+        return -1;
+    }
+
+    ncnn::Net detector;
+    detector.opt.use_vulkan_compute = false;
+    // nanodet.opt.use_bf16_storage = true;
+
+    // original pretrained model from https://github.com/RangiLyu/nanodet
+    if (detector.load_param("/home/bing/code/checkpoints/nanodet/nanodet_plus_m_1.5x_416_torchscript.ncnn.param"))
+        exit(-1);
+    if (detector.load_model("/home/bing/code/checkpoints/nanodet/nanodet_plus_m_1.5x_416_torchscript.ncnn.bin"))
+        exit(-1);
+
+    int mode = atoi(argv[1]);
+    switch (mode)
+    {
+        case 0: {
+            // webcam
+            int cam_id = atoi(argv[2]);
+            webcam_demo(detector, cam_id);
+            break;
+            }
+        case 1: {
+            // image demo
+            const char* images = argv[2];
+            image_demo(detector, images);
+            break;
+            }
+        case 2: {
+            // video
+            const char* path = argv[2];
+            video_demo(detector, path);
+            break;
+            }
+        case 3: {
+            // benchmark
+            benchmark(detector);
+            break;
+            }
+        default: {
+            fprintf(stderr, "usage: %s [mode] [path]. \n For webcam mode=0, path is cam id; \n For image demo, mode=1, path=xxx/xxx/*.jpg; \n For video, mode=2, path=xxx/xxx/*.mp4; \n For benchmark, mode=3 path=0.\n", argv[0]);
+            break;
+            }
+    }
 
     return 0;
 }
