@@ -31,18 +31,18 @@ Accelerator:
 ## Measure/Benchmark 
 no batch, no dynamic shape
 
-| Hardware | Model | Input Resolution | Batch | Data type | Sparsity | Params | GFLOPs/MACs | Accuracy | FPS | Latency (ms) |Energy | Cost ($) | Comments |
+| Hardware | Model | Input Resolution | Batch | Data type | Sparsity | Params (M) | GFLOPs/MACs | Accuracy | FPS | Latency (ms) |Energy | Cost ($) | Comments |
 |---------------|---------------|------------------|---------------|--------------|--------------|--------------|--------------|--------------|--------------|--------------|--------------|--------------|--------------|
-| RPI 5 @4 thread  | resnet18 | 3x224x224  | 1  | fp32 | 0  | 11.689512  | 1.81  | N/A  | N/A  | 20  | N/A  | N/A  |N/A  |
-| RPI 5 @4 thread  | yolov8_n | 3x640x640  | 1  | fp32 | 0 | Row | Row | Row | ~9  | 115  |Row |Row |Row |
-| RPI 5 @4 thread  | yolov8_n | 3x640x640  | 1  | int8 | 0 | Row | Row | Row | ~9  | 115  |Row |Row |Row |
-| RPI 5 @4 thread  | yolox_s | Row | Row |Row |Row |Row |Row |Row |Row |Row |Row |Row | Row |
-| RPI 5 @4 thread  | fcos | Row | Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |
-| RPI 5 @4 thread  | bytetrack | Row | Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |
-| RPI 5 @4 thread  | rtmpose | Row | Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |
-| RPI 5 @4 thread  | clip | Row | Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |
-| RPI 5 @4 thread  | llm | Row | Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |
-| RPI 5 @4 thread  | vlm | Row | Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |Row |
+| RPI 5 @4 thread  | resnet18 | 3x224x224  | 1  | fp32 | 0  | 11.689512 | 1.81  | N/A | N/A | 20 | N/A | N/A|N/A  |
+| RPI 5 @4 thread  | yolov8_n | 3x640x640  | 1  | fp32 | 0  | Row       | Row   | Row | ~9  | 115|Row | Row |Row  |
+| RPI 5 @4 thread  | yolov8_n | 3x640x640  | 1  | int8 | 0  | Row       | Row   | Row | ~9  | 115|Row | Row |Row  |
+| RPI 5 @4 thread  | nanodet  | 3x416x416  | 1  | fp32 | 0  | 2.44      | 2.97  | Row | 35  | 32 |Row | Row | Row |
+| RPI 5 @4 thread  | fcos     | Row        | Row| Row  |Row |Row        |Row    | Row | Row | Row |Row |Row | Row |
+| RPI 5 @4 thread  | bytetrack| Row        | Row| Row  |Row |Row        |Row    | Row | Row | Row |Row |Row | Row |
+| RPI 5 @4 thread  | rtmpose  | Row        | Row| Row  |Row |Row        |Row    | Row | Row | Row |Row |Row | Row |
+| RPI 5 @4 thread  | clip     | Row        | Row| Row  |Row |Row        |Row    | Row | Row | Row |Row |Row | Row |
+| RPI 5 @4 thread  | llm      | Row        | Row| Row  |Row |Row        |Row    | Row | Row | Row |Row |Row | Row |
+| RPI 5 @4 thread  | vlm      | Row        | Row| Row  |Row |Row        |Row    | Row | Row | Row |Row |Row | Row |
 
 
 
