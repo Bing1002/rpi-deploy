@@ -16,8 +16,8 @@
 
 ## Understanding (MLLM, text, image, video)
 - BLIP 
-- LLava 
-- QWEN2.5 
+- LLava-1.5
+- QWEN2-VL
 - DeepSeek 
 
 

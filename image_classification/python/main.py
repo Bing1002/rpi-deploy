@@ -5,12 +5,17 @@
 #   weight init 
 #   lr and lr scheduler 
 #   batch size
-#   batch normalization
-#   optimizer: SGD, Adam, RMSprop, ADAMW, Muon 
+#   batch normalization, layer normalization, group normalization 
+#   optimizer: SGD, Adam, RMSprop, AdamW, Muon 
 #   data augmentation:  
 #   early stop
 #   gradient clipping 
-#   EMA 
+#   EMA
+#   DDP 
+#   Gradient accumulation (microbatch): to mimic large batches 
+#   Warmup 
+#   gradient, activation check 
+#   
 import os
 import json 
 from collections import defaultdict
